@@ -1,0 +1,12 @@
+#!/bin/sh
+
+
+while :; do
+   MUSICSTATUS=$(musicstatus)
+   CURRENCY=$(currencystatus)
+   MEM=$(memorystatus)
+   FILES=$(diskspace sdb1)
+   OS=$(diskspace sda1)
+   echo "$(if [ -n "$MUSICSTATUS" ]; then echo "$MUSICSTATUS ;"; fi) USD:$CURRENCY ; $MEM ; Files:$FILES ; OS:$OS"
+   sleep 5;
+done

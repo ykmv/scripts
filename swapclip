@@ -1,0 +1,8 @@
+#!/bin/sh
+# swaps clipboards
+case $1 in
+   clipboard|clip)
+         xclip -selection clipboard -o | xclip -selection primary -i ;;
+   primary|prim)
+         xclip -selection primary -o | xclip -selection clipboard -i ;;
+esac

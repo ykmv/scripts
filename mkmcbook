@@ -1,0 +1,51 @@
+#!/bin/sh
+# Quirky script, that generates Minecraft book using some strange syntax. Can only make bold, italic, underlined, striked through, executable text. 
+FILE="$1"
+TITLE="$2"
+AUTHOR="$3"
+
+
+printf "give @p written_book"
+printf "{"
+printf "pages:['[\"\", "
+awk -F\; '{
+   if ( $0 ~ /^.B/) {
+      sub(/^\.B /, "")
+      printf("{\"text\":\"%s \", \"bold\":true},", $0)
+      sub(/$0/, "")
+   }
+   else if ( $0 ~ /^.I/) {
+      sub(/^\.I /, "")
+      printf("{\"text\":\"%s \", \"italic\":true},", $0)
+      sub(/$0/, "")
+   }
+   else if ( $0 ~ /^.UL/) {
+      sub(/^\.UL /, "")
+      printf("{\"text\":\"%s \", \"underlined\":true},", $0)
+      sub(/$0/, "")
+   }
+   else if ( $0 ~ /^.OB/) {
+      sub(/^\.OB /, "")
+      printf("{\"text\":\"%s \", \"obfuscated\":true},", $0)
+      sub(/$0/, "")
+   }
+   else if ( $0 ~ /^.CMD/ ) {
+      sub(/^\.CMD /, "")
+      printf("{\"text\":\"%s\", \"clickEvent\":{\"action\":\"run_command\",\"value\": \"%s\"}, \"color\":\"dark_blue\"},", $1, $2)
+      sub(/$0/, "")
+   }
+   else if ( $0 ~ /^.PB/ ) {
+      sub(/^\.PB /, "")
+      printf "]'\'','\''[\"\","
+   }
+   else if ( $0 ~ /^$/ ) {
+      printf("{\"text\":\"\\\\n\"},")
+   } else {
+      printf("{\"text\":\"%s \", \"color\": \"reset\"},", $0)
+   }
+}' "$FILE" | sed 's/,$//; s/},]/}]/'
+
+printf "]'],"
+printf "title: \"%s\", " "$TITLE"
+printf "author: \"%s\", " "$AUTHOR"
+printf "}\n"

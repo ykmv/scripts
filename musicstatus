@@ -1,0 +1,42 @@
+#!/bin/sh
+# formats cmus-remote -Q in nice way
+
+cmusopt() {
+   cmus-remote -Q \
+     | grep -e "$1" \
+     | sed "s/$1//"
+}
+
+artist() {
+   cmusopt artist
+}
+
+title() {
+   cmus-remote -Q \
+      | grep -e artist \
+      | sed 's/tag album //'
+}
+
+album() {
+   cmus-remote -Q \
+      | grep -e artist \
+      | sed 's/tag album //'
+}
+
+artist; 
+
+#cmus-remote -Q \
+#   | grep \
+#      -e ' artist' \
+#      -e 'title' \
+#      -e 'date' \
+#      -e 'status' \
+#   | sed '
+#      s/tag //g; 
+#      s/artist //g; 
+#      s/title /- /; 
+#      /status/s/^.*/&: /;
+#      s/status //g;
+#      /date/s/^.*/(&)/; s/date //; 
+#      s/\s$//g' \
+#   | tr '\n' ' '

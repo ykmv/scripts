@@ -1,0 +1,3 @@
+#!/bin/sh
+# converts manpage to PDF.
+apropos . | dmenu -l 30 | awk '{print $1}' | sed 's/,//g' | LANG="en_US.UTF-8" xargs -r  man -Tpdf | zathura -

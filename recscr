@@ -1,0 +1,36 @@
+#!/bin/sh
+OUTPUT=
+VIDEOSIZE=
+RECDISPLAY=$DISPLAY.0
+QP=25
+SOUND=
+FRAMERATE=
+
+while getopts f:o:v:sd:q:w name
+do
+   case $name in
+      o) OUTPUT="$OPTARG" ;;
+      v) VIDEOSIZE="$OPTARG" ;;
+      s) SOUND="OFF" ;;
+      d) RECDISPLAY="$OPTARG" ;;
+      q) QP="$OPTARG" ;;
+      f) FRAMERATE="$OPTARG" ;;
+      w) RECDISPLAY="$DISPLAY".0+$(xwininfo | awk '/Absolute/ {print $4}' | tr '\n' ',' | sed 's/,$//g') ;;
+      *) echo "Usage: recscr -o <output> -d <display> -s <screen_size> -q <qp_count>" ;;
+   esac
+done
+
+if [ -z "$OUTPUT" ]; then
+   echo "recscr: No Output" && exit;
+fi
+if [ -z "$VIDEOSIZE" ]; then
+   VIDEOSIZE=$(xwininfo -root | awk '/geometry/ {print $2}' | sed 's/+.+.//g')
+fi
+if [ -z "$FRAMERATE" ]; then
+   FRAMERATE="30";
+fi
+
+ffmpeg $(if [ -z "$SOUND" ]; then printf ' -f pulse -i 1'; fi) \
+   -vaapi_device /dev/dri/renderD128 \
+   -f x11grab -video_size "$VIDEOSIZE" -framerate "$FRAMERATE" -i "$RECDISPLAY" \
+   -vf 'hwupload,scale_vaapi=format=nv12' -c:v h264_vaapi -qp "$QP" "$OUTPUT"

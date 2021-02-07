@@ -1,0 +1,5 @@
+#!/bin/sh
+# keyboard configuration
+xset r rate 300 50
+setxkbmap -option 'caps:escape,grp:ctrl_shift_toggle' -layout 'us,ru'
+xinput --set-prop 12 "libinput Accel Speed" -0.3

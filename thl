@@ -1,0 +1,5 @@
+#!/bin/sh 
+# small launcher for Touhou games 
+THCRAP=$FILES/games/th/thutils/thcrap
+cd "$THCRAP" || exit;
+grep 'th' config/games.js | awk -F: '{print $1}' | tr '\"' ' ' | sed 's/ //g' | dmenu -l 10 -fn monospace:size=12 | xargs wine thcrap_loader.exe ru.js

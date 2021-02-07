@@ -1,0 +1,6 @@
+#!/bin/sh
+# takes URL from clipboard and downloads video to a specific folder.
+
+URL=$(xclip -selection primary -o)
+notify-send "Downloading" "$URL"
+youtube-dl "$URL" -o "/mnt/sda2/media/video/%(title)s-%(id)s.%(ext)s" && notify-send "Completed" "$URL"

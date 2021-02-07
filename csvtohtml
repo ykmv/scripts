@@ -1,0 +1,13 @@
+#!/bin/sh
+# converts CSV to HTML.
+if [ -n "$*" ]; then
+   echo "<table>"
+   sed 's/,*$//g;  
+        s/,/<\/td>\n\t\t<td>/g; 
+        s/^/\t<tr>\n\t\t<td>/;
+        s/$/<\/td>\n\t<\/tr>/;
+        ' "$1" | expand - -t 3
+   echo "</table>"
+else 
+   echo "Usage: csvtohtml <CSV file>"
+fi

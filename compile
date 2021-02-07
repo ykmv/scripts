@@ -1,0 +1,12 @@
+#!/bin/sh
+# bunch of commands for compiling different documents.
+
+INPUTFILE=$1
+
+case $INPUTFILE in
+    *.tex)    xelatex "$INPUTFILE" ;;
+    *.html)   $BROWSER "$INPUTFILE" ;;
+    *.md)     pandoc -s "$INPUTFILE" -o "${INPUTFILE%%.*}.pdf" ;;
+    *.rmd)    Rscript -e "rmarkdown::render('$INPUTFILE', '$2')" ;;
+    *.h|*.c) make ;;
+esac

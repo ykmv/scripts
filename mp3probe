@@ -1,0 +1,17 @@
+#!/bin/sh 
+echo "Metadata:"
+ffprobe "$1" 2>&1 \
+| grep -e 'Metadata' \
+       -e 'Duration' \
+       -e 'date' \
+       -e 'track' \
+       -e 'album' \
+       -e 'title' \
+       -e 'artist' \
+| sed '
+   s/^  //;
+   s/          :/:/;
+   /Duration/s/, /\n  /g;
+   /Metadata/d;
+   /replaygain/d;
+'

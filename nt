@@ -1,0 +1,4 @@
+#!/bin/sh 
+# creates new terminal with same working directory
+
+setsid -f st -c "cd $(pwd)"

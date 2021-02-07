@@ -1,0 +1,6 @@
+#!/bin/sh
+# shows weather
+# based on: https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/statusbar/forecast
+weatherreport="$HOME/.local/share/weatherreport"
+curl --connect-timeout 2 -sf "wttr.in" > "$weatherreport" || exit 1;
+sed '13q;d' "$weatherreport" | grep -o "m\\([-+]\\)*[0-9]\\+" | sort -n -t 'm' -k 2n | sed -e 1b -e '$!d' | tr '\n|m' ' ' | sed 's/\s$//g'

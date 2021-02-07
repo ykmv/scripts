@@ -1,0 +1,4 @@
+#!/bin/sh 
+
+cmus-remote -C "toggle aaa_mode";
+notify-send -t 1500 -u low "$(cmus-remote -C 'set aaa_mode')";
