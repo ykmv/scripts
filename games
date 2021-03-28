@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# SSG;$FILES/games/shmups/seihou/ssg/秋霜玉.exe;;wine
+# Game Name; Game Dir; Game Args; Game Launhcer (wine or something)
+
+CWD="$(pwd)"
+FILE="$HOME/.local/share/games"
+GAME="$(cat $FILE | dmenu -l 10 || exit 1;)"
+GAMEDIR="$(echo $GAME | awk -F\; '{print $2}')"
+GAMEARG="$(echo $GAME | awk -F\; '{print $3}')"
+GAMELAUNCH="$(echo $GAME | awk -F\; '{print $4}')"
+
+# main
+(cd ${GAMEDIR%/*} || exit 1;
+"$GAMELAUNCH" "$GAMEDIR" $GAMEARG || exit 1;
+cd "$CWD";) &

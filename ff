@@ -1,0 +1,13 @@
+#!/bin/sh
+
+scale() {
+   INPUT="$1"
+   SCALE="$2"
+   OUTPUT="$3"
+   ffmpeg -i "$INPUT" -vf scale="$SCALE":flags=lanczos "$OUTPUT"
+}
+
+case $1 in
+   scale|s) scale "$2" "$3" "$4";;
+   *) echo "Unknown CMD" ;;
+esac

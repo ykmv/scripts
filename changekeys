@@ -1,0 +1,6 @@
+#!/bin/sh
+
+xmodmap -e "keysym KP_Begin = Up"
+xmodmap -e "keysym KP_Down = Down"
+xmodmap -e "keysym KP_End = Left"
+xmodmap -e "keysym KP_Next = Right"

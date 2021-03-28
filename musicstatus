@@ -1,42 +1,47 @@
 #!/bin/sh
-# formats cmus-remote -Q in nice way
+# formats `cmus-remote -Q` in nice way
+
+CMUSOUT="$(cmus-remote -Q)"
 
 cmusopt() {
    cmus-remote -Q \
      | grep -e "$1" \
-     | sed "s/$1//"
+     | sed "s/$1 //"
 }
 
 artist() {
-   cmusopt artist
+   cmusopt artist | sed 's/tag //'
 }
 
 title() {
-   cmus-remote -Q \
-      | grep -e artist \
-      | sed 's/tag album //'
+   cmusopt title | sed 's/tag //;'
 }
 
 album() {
-   cmus-remote -Q \
-      | grep -e artist \
-      | sed 's/tag album //'
+   cmusopt album | sed 's/tag //;'
 }
 
-artist; 
+_date() {
+   cmusopt date | sed 's/tag //;'
+}
 
-#cmus-remote -Q \
-#   | grep \
-#      -e ' artist' \
-#      -e 'title' \
-#      -e 'date' \
-#      -e 'status' \
-#   | sed '
-#      s/tag //g; 
-#      s/artist //g; 
-#      s/title /- /; 
-#      /status/s/^.*/&: /;
-#      s/status //g;
-#      /date/s/^.*/(&)/; s/date //; 
-#      s/\s$//g' \
-#   | tr '\n' ' '
+status() {
+   cmusopt status 
+}
+
+sec_to_min() {
+   D="$1"
+   MIN="$(echo $D/60%60 | bc)"
+   SEC="$(echo $D%60 | bc)"
+   echo "$MIN:$SEC" | awk -F: '{printf("%02d:%02d", $1, $2)}'
+}
+
+duration() {
+   sec_to_min "$(cmusopt duration)"
+}
+
+position() {
+   sec_to_min "$(cmusopt position)"
+}
+
+echo "$(status): $(artist) - $(title) ($(_date)) $(position)/$(duration)"
